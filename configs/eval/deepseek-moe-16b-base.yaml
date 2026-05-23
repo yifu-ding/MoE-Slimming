@@ -1,0 +1,50 @@
+# =====================
+# Model and device
+# =====================
+test_only: true
+
+model_name_or_path: "deepseek-ai/deepseek-moe-16b-base"
+load_in_4bit: false
+load_in_8bit: false
+trust_remote_code: true
+
+test_speed: false
+real_slim: true
+shrink_gate: true
+
+device: "cuda"
+dtype: "bf16"          # Options: bf16 / fp16 / fp32
+use_wandb: false
+
+num_workers: 0
+calib_batches: 10
+
+# =====================
+# Training schedule
+# =====================
+max_steps: null
+log_every_n_steps: 5
+eval_every_n_steps: 20
+save_every_n_steps: 20
+
+# =====================
+# Evaluation
+# =====================
+eval_sample_limit: -1
+eval_split: "test"
+per_device_eval_batch_size: 8
+
+
+# Initialize pruning params (initial trim based on scores)
+prune_kwargs:
+  prune_ratio: 0.5           # target pruning ratio
+  mask_method_kwargs:
+    intra_layer_method: "attr_coverage"
+    intra_expert_metric: "activation"
+    intra_layer_scaling_method: "none"
+    inter_layer_method: "loss_coverage"
+  adjust_masks_kwargs:
+    align_inter: 0
+    min_per_expert: 4
+
+scores_dir: /path/to/scores/dir

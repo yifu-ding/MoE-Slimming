@@ -1,0 +1,94 @@
+# =====================
+# Model and device
+# =====================
+model_name_or_path: "deepseek-ai/deepseek-moe-16b-base"
+load_in_4bit: false
+load_in_8bit: false
+trust_remote_code: true
+
+test_speed: false
+real_slim: true
+shrink_gate: false
+
+device: "cuda"
+dtype: "bf16"          # Options: bf16 / fp16 / fp32
+use_wandb: true
+wandb_project: "slimmoe_kd"
+wandb_log_interval: 1
+wandb_name: "deepseek-ai_deepseek-moe-16b_e2e_alpaca"
+
+num_workers: 0
+
+calib_datasets: ["alpaca"]
+wandb_name: "deepseek-ai_deepseek-moe-16b_e2e_alpaca"
+output_dir: /path/to/output/dir
+
+# =====================
+# Training settings
+# =====================
+# stage 1: train expert LoRA only
+dora_rank: 32          # DoRA / LoRA rank
+lora_alpha: 128
+lora_dropout: 0.05
+max_seq_length: 2048
+n_epochs: 2
+batch_size: 32
+lr: 0.0001          # LoRA learning rate
+warmup_ratio: 0.1
+max_grad_norm: 0.5
+# Other
+grad_accum_steps: 4
+gradient_checkpointing: true
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+use_ademamix: false   # Can be unstable; use AdamW instead
+train_router_aux_loss: true   # Whether to train router auxiliary loss
+router_aux_loss_coef: 0.001  # router auxiliary loss coefficient
+
+# stage 2: add gate LoRA
+enable_gate_lora: false   # Whether to enable gate LoRA training
+gate_lora_rank: 4
+gate_lora_alpha: 16
+# Gate LR multiplier
+gate_lr_mult: 0.01     # gate_lr = lr * gate_lr_mult
+
+# stage 3 (optional): add attention LoRA if expert-only is insufficient
+enable_attn_lora: true  # Whether to enable attention LoRA training
+attn_lora_rank: 16       # attention LoRA rank (recommended smaller than expert)
+attn_lora_alpha: 64      # attention LoRA alpha
+attn_lr_mult: 0.5        # attn_lr = lr * attn_lr_mult (recommended lower than expert)
+
+# =====================
+# Training schedule
+# =====================
+max_steps: null
+log_every_n_steps: 10
+eval_every_n_steps: 20
+save_every_n_steps: 20
+
+# =====================
+# Evaluation
+# =====================
+eval_sample_limit: -1
+eval_split: "test"
+per_device_eval_batch_size: 16
+
+# Initialize pruning params (initial trim based on scores)
+prune_kwargs:
+  prune_ratio: 0.5           # target pruning ratio
+  mask_method_kwargs:
+    intra_layer_method: "attr_coverage"
+    intra_expert_metric: "activation"
+    inter_layer_method: "loss_coverage"
+  adjust_masks_kwargs:
+    align_inter: 0
+    min_per_expert: 16
+
+scores_dir: /path/to/scores/dir
+
+# =====================
+# resume & save
+# =====================
+resume_path: /path/to/resume/path
+resume_training: false
+mask_dir: /path/to/masks.pth
