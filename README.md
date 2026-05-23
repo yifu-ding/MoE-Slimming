@@ -28,41 +28,6 @@ Our method operates in four stages:
 
 ---
 
-## Configuration
-
-Configuration files are located in `configs/`. Select the appropriate file for your target model:
-
-```
-configs/
-├── train/
-│   ├── qwen1_5_moe_a2_7b_e2e_alpaca.yaml
-│   ├── deepseek-ai_deepseek-moe-16b_alpaca.yaml
-│   ├── deepseek-v2-lite.yaml
-│   └── qwen3_30b_a3b_e2e_alpaca.yaml
-└── eval/
-    └── ...
-```
-
-Edit the relevant YAML to set model paths, output directories, pruning ratios, and training hyperparameters before running each stage.
-
----
-
-## Project Structure
-
-```
-├── src/
-│   ├── base/              # Shared utilities: models, datasets, argument parsing
-│   ├── calibration/       # Channel scoring and expert importance analysis
-│   ├── prune/             # Mask generation and structural pruning
-│   └── train/             # LoRA fine-tuning and evaluation
-├── configs/               # YAML configuration files
-├── scripts/               # Shell scripts for each pipeline stage
-├── eval/                  # lm-eval integration utilities
-└── requirements.txt
-```
-
----
-
 ## Citation
 
 If you find this work useful, please cite our paper:
