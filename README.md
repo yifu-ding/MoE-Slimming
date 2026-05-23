@@ -1,6 +1,6 @@
 # Attribution-Guided and Coverage-Maximized Pruning for Structural MoE Compression
 
-> **[Attribution-Guided and Coverage-Maximized Pruning for Structural MoE Compression](https://github.com/yifu-ding/MoE-Slimming)**  
+> **[Attribution-Guided and Coverage-Maximized Pruning for Structural MoE Compression](https://openreview.net/pdf?id=oreET6Wz52)**  
 > Yifu Ding, Jiacheng Wang, Ge Yang, Yongcheng Jing, Jinyang Guo, Xianglong Liu, Dacheng Tao  
 > *Forty-Third International Conference on Machine Learning (ICML 2026) — **Spotlight***
 
